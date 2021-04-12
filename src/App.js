@@ -162,7 +162,6 @@ const EpisodeInfo = () => {
   }, [episodeId]);
   return (
     <div>
-      <h3>Episodio {episodeId}</h3>
       {error ? 
       <p>Error: {error.message}</p>
        : !isLoaded ? 
@@ -177,10 +176,13 @@ const Episode = ({ episode }) => {
   if (episode){
     return (
       <div>
+        <h3>Episodio {episode.episode}</h3>
         <ul>
           <li>Código de Episodio: {episode.episode_id}</li>
           <li>Nombre: {episode.title}</li>
+          <li>Serie: {episode.series}</li>
           <li>Fecha en que estuvo al aire: {episode.air_date}</li>
+          <li>Temporada: {episode.season}</li>
           <li>{episode.characters.length} personajes:</li>
           <ul>
           {episode.characters.map((character, index) => 
@@ -227,8 +229,9 @@ const CharacterInfo = () => {
 
   return (
     <div>
-      <h3>{characterName}</h3>
-      <Character character={character}/>
+      <ul>
+        <li><Character character={character}/></li>
+      </ul>
     </div>
   );
 };
@@ -251,14 +254,23 @@ const Character = ({ character }) => {
   else if (!isLoaded || !character) return <p>Cargando...</p>
   return (
     <div>
+      <h3>{character.name}</h3>
       <img alt={character.char_id.toString()} src={character.img} width={'30%'} height={'30%'}/>
       <ul>
+        <li>Id Personaje: {character.char_id}</li>
         <li>Estado: {character.status}</li>
-        <li>Temporadas Breaking Bad:</li>
+        <li>Sobrenombre: {character.nickname}</li>
+        <li>Retratada: {character.portrayed}</li>
+        <li>Categoria: {character.category}</li>
+        <li>Ocupación:</li>
+        <ul>
+          {character.occupation.map((oc, index) => <li key={index}>{oc}</li>)}
+        </ul>
+        {character.appearance.length > 0 ? <li>Temporadas Breaking Bad:</li> : ''}
         <ul>
           {character.appearance.map((number, index) => <li key={index}><Link to={`/breaking_bad/${number}`}>{number}</Link></li>)}
         </ul>
-        <li>Temporadas Better Call Saul:</li>
+        {character.better_call_saul_appearance.length > 0 ? <li>Temporadas Better Call Saul:</li> : ''}
         <ul>
           {character.better_call_saul_appearance.map((number, index) => <li key={index}><Link to={`/better_call_saul/${number}`}>{number}</Link></li>)}
         </ul>
@@ -348,7 +360,6 @@ const SearchResults = ({ characters }) => (
     <h3>Resultados de búsqueda: </h3>
     <ul>
       {characters.map((character, index) => <li key={index}><div>
-        <h3>{character.name}</h3>
         <Character character={character}/>
         </div></li>)}
     </ul>
